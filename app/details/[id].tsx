@@ -1,8 +1,7 @@
-import { MemberListItem } from '@/components/MemberListItem';
 import { MemberModel } from '@/models/MemberModel';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ScrollView, ActivityIndicator, Text, Image } from 'react-native';
+import { View, ScrollView, ActivityIndicator, Text, Image, StyleSheet } from 'react-native';
 
 export default function HomeScreen() {
     const emptyData: MemberModel = {
@@ -10,14 +9,10 @@ export default function HomeScreen() {
         firstName: '',
         lastName: '',
         age: 0,
-        gender: '',
         email: '',
         phone: '',
         birthDate: '',
         image: '',
-        bloodGroup: '',
-        height: 0,
-        weight: 0,
         macAddress: '',
         university: ''
     }
@@ -43,19 +38,75 @@ export default function HomeScreen() {
         getMember();
     }, []);
 
-
     return (
-        <ScrollView>
-            <View style={{ height: 100 }} />
+        <ScrollView style={{ backgroundColor: '#fff' }}>
             {
                 isLoading ? <ActivityIndicator /> :
-                    <View>
-                        <Image source={{ uri: data.image }} />
-                        <Text>Name : {`${data.firstName} ${data.lastName}`}</Text>
-                        <Text>Email : {data.email}</Text>
+                    <View style={styles.container}>
+                        <View style={styles.avatarContainer}>
+                            <Image
+                                source={{ uri: data.image }}
+                                style={styles.avatar}
+                            />
+                            <Text style={styles.name}>{`${data.firstName} ${data.lastName}`}</Text>
+                            <Text style={styles.email}>{data.email}</Text>
+                        </View>
+                        <Info title={'Phone'} text={data.phone} />
+                        <Info title={'University'} text={data.phone} />
+                        <Info title={'Birt Date'} text={`(${data.age}) ${data.birthDate}`} />
+                        <Info title={'Mac Address'} text={data.macAddress} />
                     </View>
-
             }
         </ScrollView>
     );
 }
+
+
+type InfoData = {
+    title: string,
+    text: string
+}
+
+function Info(props: InfoData) {
+    return (
+        <View style={styles.infoContainer}>
+            <Text style={styles.infoLabel}>{props.title}:</Text>
+            <Text style={styles.infoValue}>{props.text}</Text>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        padding: 20,
+    },
+    avatarContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    avatar: {
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+    },
+    name: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    email: {
+        fontSize: 12,
+        color: 'grey'
+    },
+    infoContainer: {
+        marginTop: 20,
+    },
+    infoLabel: {
+        fontWeight: 'bold',
+    },
+    infoValue: {
+        marginTop: 5,
+    },
+})
