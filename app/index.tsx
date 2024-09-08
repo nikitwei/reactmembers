@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
 
 
 export default function HomeScreen() {
@@ -31,6 +31,7 @@ export default function HomeScreen() {
                 isLoading ? <ActivityIndicator /> :
                 data.map((member) => (
                         <View style={styles.container} key={member["id"]}>
+                            <Image source={{uri: member["image"]}} style={styles.memberImage}/>
                             <Text>Name : {`${member["firstName"]} ${member["lastName"]}`}</Text>
                             <Text>NIK : {member["email"]}</Text>
                         </View>
@@ -50,5 +51,9 @@ const styles = StyleSheet.create({
     },
     header: {
         height: 100
+    },
+    memberImage:{
+        width: 50, 
+        height: 50
     }
 });
