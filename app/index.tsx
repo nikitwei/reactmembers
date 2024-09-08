@@ -1,33 +1,42 @@
 import { Link } from 'expo-router';
-import { View, ScrollView, Text, StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-const dummyData = [
-    {
-        id : 1,
-        name: "John Doe",
-        nik: "20240909"
-    },
-    {
-        id : 2,
-        name: "Jean Doe",
-        nik: "20240909"
-    }
-]
 
 export default function HomeScreen() {
+    const [isLoading, setLoading] = useState(true);
+    const [data, setData] = useState<[]>([]);
+    
+    const getMembers = async () => {
+        try {
+            const response = await fetch('https://dummyjson.com/users');
+            const json = await response.json();
+            setData(json["users"]);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    useEffect(() => {
+        getMembers();
+    }, []);
+    
+
     return (
         <ScrollView>
-            <View style={styles.header}>
-
-            </View>
+            <View style={styles.header} />
             {
-                dummyData.map((data) => (
-                    <View style={styles.container} key={data.id}>
-                        <Text>Name : {data.name}</Text>
-                        <Text>NIK : {data.nik}</Text>
-                    </View>
-                ))
+                isLoading ? <ActivityIndicator /> :
+                data.map((member) => (
+                        <View style={styles.container} key={member["id"]}>
+                            <Text>Name : {`${member["firstName"]} ${member["lastName"]}`}</Text>
+                            <Text>NIK : {member["email"]}</Text>
+                        </View>
+                    ))
             }
+
         </ScrollView>
     );
 }
@@ -39,7 +48,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 15,
     },
-    header:{
+    header: {
         height: 100
     }
 });
