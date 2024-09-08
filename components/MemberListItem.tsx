@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import { Image, StyleSheet, Text, View } from 'react-native';
 
 type MemberListItemModel = {
@@ -10,20 +11,24 @@ type MemberListItemModel = {
 
 export function MemberListItem(props: MemberListItemModel) {
   return (
-    <View style={styles.container} key={props.id}>
-      <Image source={{ uri: props.image }} style={styles.memberImage} />
-      <Text>Name : {`${props.firstName} ${props.lastName}`}</Text>
-      <Text>Email : {props.email}</Text>
-    </View>
+    <Link href={`/details/${props.id}`} style={styles.link}>
+      <View style={styles.container} key={props.id}>
+        <Image source={{ uri: props.image }} style={styles.memberImage} />
+        <Text>Name : {`${props.firstName} ${props.lastName}`}</Text>
+        <Text>Email : {props.email}</Text>
+      </View>
+    </Link>
   );
 }
 
 const styles = StyleSheet.create({
+  link: {
+    marginHorizontal:'auto',
+    marginBottom:20
+  },
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 15,
+    display:'flex',
+    flexDirection:'row'
   },
   memberImage: {
     width: 50,
